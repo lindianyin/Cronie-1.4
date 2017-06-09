@@ -1,0 +1,101 @@
+.TH ANACRONTAB 5 2009-07-17 "Marcela Mašláňová" "Anacron Users' Manual"
+.SH NAME
+/etc/regularly-jobs \- configuration file for anacron
+.SH DESCRIPTION
+The file
+.I /etc/regularly-jobs
+describes the jobs controlled by \fBanacron(8)\fR.  Its lines can be of
+three kinds:  job-description lines, environment
+assignments, or empty lines.
+.PP
+Job-description lines are of one of these two forms:
+.PP
+   period  delay  job-identifier  command
+.PP
+.PP
+   @period_name delay job-identify command
+.PP
+The 
+.I period
+is specified in days, the 
+.I delay
+in minutes. In addition, if the 
+.I RANDOM_DELAY
+environment variable is set, then the value of 
+.I RANDOM_DELAY 
+is added to the delay. The value in 
+.I RANDOM_DELAY 
+denotes a maximal additional delay in minutes, where the minimum delay value is set, to user delay from anacrontab. A 
+.I RANDOM_DELAY 
+set to 12 would therefore add, randomly, between 0 and 12 minutes to the user defined delay.
+The
+.I job-identifier
+can contain any non-blank character, except slashes.  It is used to identify
+the job in Anacron messages,
+and as the name for the job's timestamp file.  The
+.I command
+can be any shell command. The fields can be seperated by blank spaces or tabs.
+The
+.I period_name
+can only be set to monthly at the present time. This will ensure jobs
+are only run once a month, no matter the number of days in this month,
+or the previous month.
+.PP
+Environment assignment lines are of the form:
+.PP
+   VAR = VALUE
+.PP
+Spaces around
+.I VAR
+are removed.  No spaces around
+.I VALUE
+are allowed (unless you want them to be part of the value).  The assignment
+takes effect from the next line to the end of the file, or to the next
+assignment of the same variable. The enviroment variable 
+.I START_HOURS_RANGE
+sets the time frame, when the job could started.
+.PP
+Empty lines are either blank lines, line containing white-space only, or
+lines with white-space followed by a '#' followed by an arbitrary comment.
+.PP
+You can continue a line onto the next line by ending it with a '\\'.
+.PP
+In case there is need for having anacron off, then it can be done by
+adding cron job
+.I 0anacron
+into 
+.I /etc/cron.hourly/jobs.deny
+.SH EXAMPLE
+This example shows how to set up the behaviour similar to previous setting in 
+.I /etc/crontab
+which will start all regular jobs
+.I only
+between 6:00 and 8:00. There is added RANDOM_DELAY which will be maximally
+30 minutes. Jobs will be running in queue. After one finish, then next will start.
+
+.nf
+# environment variables
+SHELL=/bin/sh
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+RANDOM_DELAY=30
+# Anacron jobs will start between 6 and 8 o'clock.
+START_HOURS_RANGE=6-8
+# delay will be 5 minutes + RANDOM_DELAY for cron.daily
+1		0	cron.daily		nice run-parts /etc/cron.daily
+7		0	cron.weekly		nice run-parts /etc/cron.weekly
+@monthly	0	cron.monthly		nice run-parts /etc/cron.monthly
+.fi
+.SH "SEE ALSO"
+.IR anacron(8),
+.IR crontabs(4)
+.PP
+The Anacron
+.I README
+file.
+.SH AUTHOR
+Itai Tzur <itzur@actcom.co.il>
+.PP
+Currently maintained by Pascal Hakim <pasc@(debian.org|redellipse.net)>.
+.PP
+For Fedora maintained by Marcela Mašláňová <mmaslano@redhat.com>.

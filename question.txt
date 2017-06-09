@@ -1,0 +1,112 @@
+#if defined(HAVE_FCNTL) && defined(F_SETLK)
+static int trylock_file(int fd) {
+	struct flock fl;
+
+	memset(&fl, '\0', sizeof (fl));
+	fl.l_type = F_WRLCK;
+	fl.l_whence = SEEK_SET;
+	fl.l_start = 0;
+	fl.l_len = 0;
+
+	return fcntl(fd, F_SETLK, &fl);
+}
+#elif defined(HAVE_LOCKF)
+# define trylock_file(fd)      lockf((fd), F_TLOCK, 0)
+#elif defined(HAVE_FLOCK)
+# define trylock_file(fd)      flock((fd), LOCK_EX|LOCK_NB)
+#endif
+
+
+		(void) fchmod(fd, 0644);
+		(void) fcntl(fd, F_SETFD, 1);
+		
+		 getgrnam(CRON_GROUP);
+		
+		stat
+		
+		mkdir
+		
+		
+		ENOENT
+		
+		S_ISDIR
+		
+		chown
+		
+		chmod
+		
+		putenv
+		
+		setlocale
+		
+		if ((cs = nl_langinfo(CODESET)) != 0L)
+		
+		
+		fork()
+		
+		setsid
+		
+		
+		open
+		
+		dup2
+		
+		open(LOG_FILE, O_WRONLY | O_APPEND | O_CREAT, 0600);
+		
+		openlog
+		
+		syslog
+		
+		ftruncate
+		
+		write
+		
+		max_mtime
+		
+	if (!(dir = opendir(SPOOL_DIR))) {
+		log_it("CRON", pid, "OPENDIR FAILED", SPOOL_DIR, errno);
+	}
+	else {
+		while (NULL != (dp = readdir(dir))) {
+			char fname[MAXNAMLEN + 1], tabname[MAXNAMLEN + 1];
+
+			if (not_a_crontab(dp))
+				continue;
+
+			strncpy(fname, dp->d_name, MAXNAMLEN);
+
+			if (!glue_strings(tabname, sizeof tabname, SPOOL_DIR, fname, '/'))
+				continue;	/* XXX log? */
+
+			process_crontab(fname, fname, tabname, &new_db, old_db);
+		}
+		closedir(dir);
+	}		
+		
+		
+		
+		
+		endpwent
+		
+		getpwnam
+		
+		fdopen
+		
+		strdup
+		
+		pipe
+		
+		execle
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
